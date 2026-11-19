@@ -251,53 +251,50 @@ public class ArrayUtil {
         return result;
     }
 
-    /**
-     * 12. Finds the longest non-decreasing subsequence.
-     *
-     * @param array the input integer array
-     * @return the longest non-decreasing subsequence
-     */
-    public static int[] longestIncreasingSubsequence(int[] array) {
-        if (array.length == 0) {
-            return new int[0];
-        }
+    
+/**
+ * Finds an increasing subsequence by selecting the first possible
+ * element that is greater than or equal to the previous selected element.
+ *
+ * @param array the input array of integers
+ * @return an array containing the selected increasing subsequence
+ */
+public static int[] longestIncreasingSubsequence(int[] array) {
+    int[] best = new int[array.length];
+    int maxLength = 0;
 
-        int n = array.length;
-        int[] dp = new int[n];
-        int[] previous = new int[n];
+    for (int i = 0; i < array.length; i++) {
+        int[] current = new int[array.length];
+        int count = 1;
 
-        for (int i = 0; i < n; i++) {
-            dp[i] = 1;
-            previous[i] = -1;
-        }
+        current[0] = array[i];
+        int last = array[i];
 
-        int maxLength = 1;
-        int lastIndex = 0;
-
-        for (int i = 1; i < n; i++) {
-            for (int j = 0; j < i; j++) {
-                if (array[j] <= array[i] && dp[j] + 1 > dp[i]) {
-                    dp[i] = dp[j] + 1;
-                    previous[i] = j;
-                }
-            }
-
-            if (dp[i] > maxLength) {
-                maxLength = dp[i];
-                lastIndex = i;
+        for (int j = i + 1; j < array.length; j++) {
+            if (array[j] >= last) {
+                current[count] = array[j];
+                last = array[j];
+                count++;
             }
         }
 
-        int[] result = new int[maxLength];
-        int index = maxLength - 1;
+        if (count > maxLength) {
+            maxLength = count;
 
-        while (lastIndex != -1) {
-            result[index--] = array[lastIndex];
-            lastIndex = previous[lastIndex];
+            for (int k = 0; k < count; k++) {
+                best[k] = current[k];
+            }
         }
-
-        return result;
     }
+
+    int[] result = new int[maxLength];
+
+    for (int i = 0; i < maxLength; i++) {
+        result[i] = best[i];
+    }
+
+    return result;
+}
 
     /**
      * 13. Converts a binary number represented by an array
